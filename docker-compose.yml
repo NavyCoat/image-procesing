@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+    php:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        volumes:
+            - .:/var/www/html
+        depends_on:
+            - mysql
+            - redis
+
+    nginx:
+        image: nginx:1.21
+        ports:
+            - '80:80'
+        volumes:
+            - ./nginx.conf:/etc/nginx/conf.d/default.conf
+            - .:/var/www/html
+        depends_on:
+            - php
+
+    mysql:
+        image: mysql:8.0.32
+        environment:
+            MYSQL_DATABASE: symfony_db
+            MYSQL_USER: user
+            MYSQL_PASSWORD: password
+            MYSQL_ROOT_PASSWORD: root_password
+        volumes:
+            - mysql_data:/var/lib/mysql
+
+    redis:
+        image: redis:7.0-alpine
+        volumes:
+            - redis_data:/data
+
+    queue-worker:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        volumes:
+            - .:/var/www/html
+        command: php bin/console messenger:consume async -vv
+        depends_on:
+            - mysql
+            - redis
+
+volumes:
+    mysql_data:
+    redis_data:
