@@ -12,15 +12,15 @@
   - [ ] Case for implementation: Filesize of images in a given resolution
 
 ## Stack requirements
-- [ ] PHP >8.0
+- [x] PHP >8.0
 - [ ] Laravel, Symfony or Yii
 - [ ] Database migrations
 - [ ] Some UI without CSS
-- [ ] Docker
-- [ ] Use queues if needed
-- [ ] Tests for code/features
-- [ ] Documentation of how the System works
-- [ ] Result on GitHub
+- [x] Docker
+- [x] Use queues if needed
+- [x] Tests for code/features
+- [x] Documentation of how the System works
+- [x] Result on GitHub
 
 # Proposed solution
 
@@ -56,3 +56,29 @@ they also need to be able to receive files. So there is a need for a separate mo
 
 ## Image from Event Storming
 ![img.png](img.png)
+
+# Summary after 3 hours
+I wanted to spend 1 hour on the task. But after 1 hour, I only had some Event Storming made.
+And not all questions were answered. And the task seems to be bigger and bigger.
+But modeling and planning is the most important part when working on any software.
+So after I modeled every module in the system, I started to write tests for the parts of the systems that are interacting.
+I prepared tests for the interfaces between modules (they are still represented as a class because I didn't have more time for it).
+After that, I started modeling code inside each module.
+Many things need to be implemented, but now when responsibilities between modules are settled each module can focus
+on doing its job.
+
+Some technical details that could be implemented in the systems:
+- Images:
+  - Storing images will be split:
+    - representation in Database (Image name, filename, uuid).
+    - Image data attached to uuid
+  - Storing image data can have different requirements
+    - We may want to compress the original files
+    - We may want to have the fastest storage for recent image
+  - Filesystem
+    - there is a limit of files in directories. The implementation should deal with that
+    - files should not be accessible by web users
+  - Allowlist of formats
+- Image processing:
+  - The idea is to have a Process that knows the list of steps and what is the current one. So each step can be implemented by different services in future
+  - 
